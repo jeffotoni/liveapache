@@ -22,7 +22,7 @@ TO="mailto@domain.com"
 # Domains to test if they are online
 # Are all on the same server
 #
-DOMAIN_TEST='https://www.bolsasrelicario1.com.br http://s1.s3wf.com.br'
+DOMAIN_TEST='https://www.yourdomain1.com http://yourdomain2.com'
 
 #
 #
