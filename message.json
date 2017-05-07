@@ -1,0 +1,15 @@
+{
+   "Subject": {
+       "Data": "Server 7.0. Offline",
+       "Charset": "UTF-8"
+   },
+   "Body": {
+       "Text": {
+           "Data": "",
+           "Charset": "UTF-8"
+       },
+       "Html": {
+           "Data": "<h1>Service is off the air, does not respond, something strange has occurred</h1>"
+       }
+   }
+}
