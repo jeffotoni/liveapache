@@ -35,12 +35,17 @@ ACTIVE_MAIL="mailutils"
 # so that its function is appropriate 
 # as each linux distribution
 #
-SO="Ubuntu"
+OS="Ubuntu"
 
 #
 # path log error apache
 #
 PATHLOG_ERROR="/var/log/apache2/error.log"
+
+#
+# path log postgresql
+#
+PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/postgresql-2017-05-07_000000.log"
 
 #
 # Domains to test if they are online
@@ -147,9 +152,24 @@ DoApacheUbuntu ()
 {
 
     #
+    # check file exist
+    #
+    if [ -e $PATHLOG_ERROR ]
+        then
+
+    #
     # Listing the last 20 lines of the log
     #
     log_error=$(tail -n 20 $PATHLOG_ERROR)
+    
+    else
+
+    #
+    #
+    #
+    log_error="I could not find the file to read your log"
+    
+    fi
 
     #
     # message
@@ -170,7 +190,7 @@ DoApacheUbuntu ()
         #
         # body message mail
         #
-        MSG="Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache.\n\n Check your log:\n\n$log_error"
+        MSG="Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in $PATHLOG_ERROR.\n\n Check your log:\n\n$log_error"
 
         #
         # send email [mail]
@@ -190,7 +210,7 @@ DoApacheUbuntu ()
         #
         # send email [aws cli]
         #
-        sendmailaws $TO "Server 7.0. ficou Offline! $IDTIME" "<h1>Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache</h1><br/><h2>Check your log:</h2><p>$clean_error</p>"
+        sendmailaws $TO "Server 7.0. Apache Offline! $IDTIME" "<h1>Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in $PATHLOG_ERROR</h1><br/><h2>Check your log:</h2><p>$clean_error</p>"
 
     fi
         
@@ -222,6 +242,131 @@ DoApacheUbuntu ()
     #
 }
 
+DoPingPostgres () {
+
+    echo 
+    echo "Testing if postgresql is responding:"
+    echo 
+
+    #
+    # postgresl >= 9.3
+    #
+    ping=$(pg_isready -U postgres)
+
+    #
+    # Split and taking the second position
+    #
+    status=$(echo "$ping" | cut -d "-" -f 2)
+
+    #
+    # Removing spaces before and after, trim
+    #
+    status=$(echo -n ${status} | tr -d "\t\r\n")
+
+    #
+    # lowercase
+    #
+    status_lower=$(echo "$status" | awk '{print tolower($0)}')
+        
+
+    if [ "$status_lower" = "accepting connections" ]
+    then
+        
+        echo "Postgresql Online"
+
+    else
+        
+        echo "Postgresql Offline"
+        
+        #
+        # Restarting the service
+        #
+        DoRestartPostgres$OS "$status_lower"
+        
+    fi
+}
+
+DoRestartPostgresUbuntu ()
+{
+
+    if [ -e $PATHLOG_POSTGRE ]
+        then
+
+        #
+        # Listing the last 20 lines of the log
+        #
+        log_error=$(tail -n 50 $PATHLOG_POSTGRE)
+
+    else
+        log_error="I could not find the file to read your log"        
+    fi
+   
+
+    if [ $ACTIVE_MAIL = "mailutils" ]
+        then
+        
+        echo "active mail utils"
+
+        #
+        # message mail title
+        #
+        TITLE="Error Postgresql Offline!!! $IDTIME" 
+
+        #
+        # body message mail
+        #
+        MSG="Postgresql being initialized, it was offline for some reason we do not know, return server [$1] check the postgresql logs in $PATHLOG_POSTGRE.\n\n Check your log:\n\n$log_error"
+
+        #
+        # send email [mail]
+        #
+        sendmail "$TO" "$TITLE" "$MSG"
+
+    else
+        
+        echo "active aws cli"
+
+        #
+        # Removing \ t \ r and character '
+        #
+        clean_error=$(echo -n ${log_error} | tr -d "'\t\r")
+        clean_error=$(echo -n ${clean_error} | tr -d '"')
+
+        #
+        # send email [aws cli]
+        #
+        sendmailaws $TO "Server 7.0. Postgresql Offline! $IDTIME" "<h1>Postgresql being initialized, it was offline for some reason we do not know, return server [$1] check the postgresql logs in $PATHLOG_POSTGRE</h1><br/><h2>Check your log:</h2><p>$clean_error</p>"
+
+    fi
+        
+
+    echo 
+    #
+    # message
+    # 
+    echo "Restarting postgresql"
+
+    #
+    # Stopping the service
+    #
+    /etc/init.d/postgresql stop > /dev/null
+
+    #
+    # Ensuring there are no more apache processes
+    #
+    killall -9 postgresql > /dev/null 2>&1
+
+    #
+    # Initializing the service
+    #
+    /etc/init.d/postgresql start
+
+    #
+    # Checking if everything is okay.
+    #
+}
+
+
 ######  End functions
 
 
@@ -239,9 +384,18 @@ do
     
     CMD=$(curl -Is $DOMAIN -L | grep HTTP/)
 
+    #
+    # ex: -- my text --
+    # trim --my text--
+    #
     cmd_trim=$(echo -n ${CMD} | tr -d "\t\r\n")
 
-    if [ "$cmd_trim" = "HTTP/1.1 200 OK" ]
+    #
+    # Uppercase
+    #
+    cmd_trim_upper=$(echo "$cmd_trim" | awk '{print toupper($0)}')
+
+    if [ "$cmd_trim_upper" = "HTTP/1.1 200 OK" ]
     then
 
         echo "Apache Online [$DOMAIN]"        
@@ -251,7 +405,7 @@ do
         # 
         # stop/start server
         # 
-        DoApache$SO "$cmd_trim"
+        DoApache$OS "$cmd_trim"
 
     fi
     
@@ -264,6 +418,7 @@ done
 # message
 # According to the method of checking
 #
+sleep 5
 echo 
 echo "Second method of apache alive check?"
 
@@ -283,6 +438,7 @@ then
     # message
     #
     echo "Apache online!!"
+    
     sleep 1
     
 else 
@@ -294,10 +450,18 @@ else
     #
     # Restart the service
     #
-    DoApache$SO "Did not find the apache process"
+    DoApache$OS "Did not find the apache process"
 fi
 
-           
 
+#
+# message
+#
+sleep 2
+echo 
+echo "Checking Postgresql"
 
+DoPingPostgres
 
+echo 
+echo "End of check"

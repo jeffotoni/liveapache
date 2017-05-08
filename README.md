@@ -77,7 +77,7 @@ ACTIVE_MAIL="mailutils"
 #  --destination '{}'
 #  --message '{}'
 # 
-
+	
 #
 # Shipping method aws cli ses
 #
@@ -101,7 +101,7 @@ SO="Ubuntu"
 You can create your own function for your favorite distribution, look at the example
 
 
-```
+```sh
 
 #
 # Function call
@@ -118,6 +118,30 @@ DoApacheUbuntu ()
 
 ```
 
+You can also create a postgresql-specific function for your distribution
+
+
+```sh
+
+#
+# Function call
+#
+DoPingPostgres
+
+#
+# Function statement
+#
+DoPingPostgres ()
+{
+  # 
+  # If postgresql is not responding
+  #
+
+  # code ...
+  DoRestartPostgres$OS "$status_lower"
+}
+
+```
 
 Determines the path of the apache error log
 
@@ -128,6 +152,18 @@ Determines the path of the apache error log
 # path log error apache
 #
 PATHLOG_ERROR="/var/log/apache2/error.log"
+
+```
+
+Determines the path of the Postgresql error log
+
+
+```sh
+
+#
+# path log error postgresql
+#
+PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/yourlog.log"
 
 ```
 
