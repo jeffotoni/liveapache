@@ -10,7 +10,7 @@
 #
 # Email for email submissions
 #
-FROM="yourmail@domain.com"
+FROM="yourfrom@domain.com"
 
 
 #
@@ -160,6 +160,7 @@ DoApacheUbuntu ()
 {
 
     PATHLOG_ERROR_TMP="/tmp/tmp_apache_error.log"
+
     #
     # check file exist
     #
@@ -169,17 +170,19 @@ DoApacheUbuntu ()
     #
     #
     #
-    #cat $PATHLOG_ERROR > $PATHLOG_ERROR_TMP
+    cat $PATHLOG_ERROR > $PATHLOG_ERROR_TMP
 
     #
+    # Doing replace in the file, \ n for <br>, 
+    # so that it can be sent by aws as html and become 
+    # more readable by the administrator
     #
-    #
-    #sed -i 's/\n/<br>/g' $PATHLOG_ERROR_TMP
+    sed -i -z 's/\n/<br>\n/'g $PATHLOG_ERROR_TMP
 
     #
     # Listing the last 30 lines of the log
     #
-    log_error=$(tail -n 30 $PATHLOG_ERROR)
+    log_error=$(tail -n 30 $PATHLOG_ERROR_TMP)
     
     else
 
