@@ -1,4 +1,4 @@
-# liveapache
+# livewebserver
 Script in bash, to check if the apache server is online, if it is not rebooting the service.
 
 It sends e-mails to communicate if the server is not online, you can use mail for client to send mail or aws cli, but for aws cli will have to install in your linux environment.
@@ -169,7 +169,7 @@ PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/yourlog.log"
 
 # running
 
-$ sh liveapache.sh
+$ sh livewebserver.sh
 
 # Can be configured by cron to be called from time to time
 
@@ -177,6 +177,6 @@ Calling the script every 1 minute
 
 ```sh
 
-*/1 * * * *   cd /dir/script && sh liveapache.sh >> liveapache.log
+*/1 * * * *   cd /script/livewebserver && sh livewebserver.sh >> livewebserver.log
 
 ```
