@@ -27,7 +27,7 @@ ACTIVE_MAIL="mailutils"
 #
 # Shipping method aws cli ses
 #
-# ACTIVE_MAIL="aws"
+ACTIVE_MAIL="aws"
 
 
 #
@@ -59,6 +59,14 @@ DOMAIN_TEST='https://www.yourdomain1.com http://yourdomain2.com'
 #
 #
 IDTIME=$(date +%s)
+
+
+#
+#
+#  DATE
+#
+#
+DATE=$(date)
 
 
 ###### Declaration of functions
@@ -151,6 +159,7 @@ sleep 1
 DoApacheUbuntu ()
 {
 
+    PATHLOG_ERROR_TMP="/tmp/tmp_apache_error.log"
     #
     # check file exist
     #
@@ -158,9 +167,19 @@ DoApacheUbuntu ()
         then
 
     #
-    # Listing the last 20 lines of the log
     #
-    log_error=$(tail -n 20 $PATHLOG_ERROR)
+    #
+    #cat $PATHLOG_ERROR > $PATHLOG_ERROR_TMP
+
+    #
+    #
+    #
+    #sed -i 's/\n/<br>/g' $PATHLOG_ERROR_TMP
+
+    #
+    # Listing the last 30 lines of the log
+    #
+    log_error=$(tail -n 30 $PATHLOG_ERROR)
     
     else
 
@@ -174,6 +193,7 @@ DoApacheUbuntu ()
     #
     # message
     #
+    echo DATE
     echo "Apache Offline [$DOMAIN]"
     
 
@@ -190,7 +210,7 @@ DoApacheUbuntu ()
         #
         # body message mail
         #
-        MSG="Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in $PATHLOG_ERROR.\n\n Check your log:\n\n$log_error"
+        MSG="Server 7.0 being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in $PATHLOG_ERROR.\n\n Check your log:\n\n$log_error"
 
         #
         # send email [mail]
@@ -204,7 +224,7 @@ DoApacheUbuntu ()
         #
         # Removing \ t \ r and character '
         #
-        clean_error=$(echo -n ${log_error} | tr -d "'\t\r")
+        clean_error=$(echo -n ${log_error} | tr -d "'")
         clean_error=$(echo -n ${clean_error} | tr -d '"')
 
         #
@@ -276,6 +296,7 @@ DoPingPostgres () {
 
     else
         
+        echo DATE
         echo "Postgresql Offline"
         
         #
@@ -442,6 +463,9 @@ then
     sleep 1
     
 else 
+
+    echo DATE
+
     #
     #
     #
