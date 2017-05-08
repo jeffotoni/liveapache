@@ -1,9 +1,12 @@
 # livewebserver
-Script in bash, to check if the apache server is online, if it is not rebooting the service.
 
-It sends e-mails to communicate if the server is not online, you can use mail for client to send mail or aws cli, but for aws cli will have to install in your linux environment.
+Script in bash, to check if the server apache2 and postgresql are online, if you are not restarting the services.
 
-This script was made in bash in ubuntu environment.
+It sends emails to communicate if the server is not online, you can use the mail for the client to send email or aws cli, but for aws cli will have to install in your linux environment.
+
+This script was made in bash in the ubuntu environment at first, we are checking apache2 and postgresql.
+
+Some other services that we will need to implement are redis and nginx.
 
 # Setting up some variables
 
