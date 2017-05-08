@@ -177,6 +177,14 @@ DoApacheUbuntu ()
     #
     cat $PATHLOG_ERROR > $PATHLOG_ERROR_TMP
 
+
+    #
+    # Can make put the contents of the 
+    # file into a variable and use sed without the i
+    #
+    #content_log_erro=$(tail -n 80 $PATHLOG_ERROR)
+    #content_log_erro=$(echo $content_log_erro | sed -z 's/\n/<br>\n/'g)
+
     #
     # Doing replace in the file, \ n for <br>, 
     # so that it can be sent by aws as html and become 
@@ -187,7 +195,7 @@ DoApacheUbuntu ()
     #
     # Listing the last 30 lines of the log
     #
-    log_error=$(tail -n 30 $PATHLOG_ERROR_TMP)
+    log_error=$(tail -n 50 $PATHLOG_ERROR_TMP)
     
     else
 
