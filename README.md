@@ -35,7 +35,7 @@ DOMAIN_TEST='https://www.yourdomain1.com http://yourdomain2.com'
 
 ```
 
-There are 2 ways to send emails sendmail and sendmailaws, one is by using the mail from the aws cli package to install http://docs.aws.amazon.com/cli/latest/userguide/installing.html to know more about aws ses http: // docs .aws.amazon.com/cli/ latest / reference / ses / send-email.html
+There are 2 ways to send emails sendmail and sendmailaws, one is by using the mail from the aws cli package to install http://docs.aws.amazon.com/cli/latest/userguide/installing.html to know more about aws ses http://docs.aws.amazon.com/cli/latest/reference/ses/send-email.html
 
 By default mail is enabled
 
@@ -65,6 +65,27 @@ Determines which is the operating system, so that its function is appropriate as
 SO="Ubuntu"
 
 ```
+
+You can create your own function for your favorite distribution, look at the example
+
+
+```
+
+#
+# Function call
+#
+DoApache$SO
+
+#
+# Function statement
+#
+DoApacheUbuntu ()
+{
+  #code
+}
+
+```
+
 
 Determines the path of the apache error log
 
