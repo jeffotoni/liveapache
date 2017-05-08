@@ -35,7 +35,7 @@ DOMAIN_TEST='https://www.yourdomain1.com http://yourdomain2.com'
 
 ```
 
-There are 2 ways to send emails sendmail and sendmailaws, one is by using the mail from the aws cli package to install http://docs.aws.amazon.com/cli/latest/userguide/installing.html to know more about aws ses http://docs.aws.amazon.com/cli/latest/reference/ses/send-email.html
+There are 2 ways to send emails sendmail and sendmailaws, one is by using the mail from the aws cli package to install [mail (utils)](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) to know more about aws ses [aws cli (Ses)](http://docs.aws.amazon.com/cli/latest/reference/ses/send-email.html) 
 
 By default mail is enabled
 
@@ -45,6 +45,38 @@ By default mail is enabled
 # Shipping method mailutils
 #
 ACTIVE_MAIL="mailutils"
+
+#
+# Sending emails through aws cli
+# The parameters are jsons
+#
+# destination.json => {"ToAddresses":  ["mailto@domain.com"]}
+# 
+# message.json => {
+# 
+#   "Subject": {
+#       "Data": "Server Apache Checking",
+#       "Charset": "UTF-8"
+#   },
+#   "Body": {
+#       "Text": {
+#           "Data": "",
+#            "Charset": "UTF-8"
+#        },
+#        "Html": {
+#            "Data": "<h1>Server stopped, initializing apache</h1>"
+#        }
+#    }
+# }
+# 
+# --destination file://destination.json
+# --message file://message.json
+# 
+#  OR
+#  
+#  --destination '{}'
+#  --message '{}'
+# 
 
 #
 # Shipping method aws cli ses
