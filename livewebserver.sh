@@ -43,9 +43,15 @@ OS="Ubuntu"
 PATHLOG_ERROR="/var/log/apache2/error.log"
 
 #
+# path tmp log, For sed uses it
+#
+PATHLOG_ERROR_TMP="/tmp/livewebserver_tmp_error.log"
+
+#
 # path log postgresql
 #
 PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/postgresql-2017-05-07_000000.log"
+
 
 #
 # Domains to test if they are online
@@ -159,7 +165,6 @@ sleep 1
 DoApacheUbuntu ()
 {
 
-    PATHLOG_ERROR_TMP="/tmp/tmp_apache_error.log"
 
     #
     # check file exist
