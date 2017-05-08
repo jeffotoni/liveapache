@@ -322,9 +322,21 @@ DoRestartPostgresUbuntu ()
         then
 
         #
+        #
+        #
+        cat $PATHLOG_ERROR > $PATHLOG_ERROR_TMP
+
+        #
+        # Doing replace in the file, \ n for <br>, 
+        # so that it can be sent by aws as html and become 
+        # more readable by the administrator
+        #
+        sed -i -z 's/\n/<br>\n/'g $PATHLOG_ERROR_TMP
+
+        #
         # Listing the last 20 lines of the log
         #
-        log_error=$(tail -n 50 $PATHLOG_POSTGRE)
+        log_error=$(tail -n 50 $PATHLOG_ERROR_TMP)
 
     else
         log_error="I could not find the file to read your log"        
