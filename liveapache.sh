@@ -12,11 +12,35 @@
 #
 FROM="yourmail@domain.com"
 
+
 #
 # Email to
 #
 TO="mailto@domain.com"
 
+    
+#
+# Shipping method mailutils
+#
+ACTIVE_MAIL="mailutils"
+
+#
+# Shipping method aws cli ses
+#
+# ACTIVE_MAIL="aws"
+
+
+#
+# Determines which is the operating system, 
+# so that its function is appropriate 
+# as each linux distribution
+#
+SO="Ubuntu"
+
+#
+# path log error apache
+#
+PATHLOG_ERROR="/var/log/apache2/error.log"
 
 #
 # Domains to test if they are online
@@ -119,34 +143,57 @@ sleep 1
 #
 # Initializing apache server (ubuntu)
 #
-restart_apache ()
+DoApacheUbuntu ()
 {
+
+    #
+    # Listing the last 20 lines of the log
+    #
+    log_error=$(tail -n 20 $PATHLOG_ERROR)
 
     #
     # message
     #
     echo "Apache Offline [$DOMAIN]"
     
-    #
-    # message mail title
-    #
-    TITLE="Error Apache Offline!!! $IDTIME" 
 
-    #
-    # body message mail
-    #
-    MSG="Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache"
+    if [ $ACTIVE_MAIL = "mailutils" ]
+        then
+        
+        echo "active mail utils"
 
-    #
-    # send email [mail]
-    #
-    sendmail "$TO" "$TITLE" "$MSG"
-    
-    #
-    # send email [aws cli]
-    #
-    sendmailaws $TO "Server 7.0. ficou Offline! $IDTIME" "<h1>Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache</h1>"
+        #
+        # message mail title
+        #
+        TITLE="Error Apache Offline!!! $IDTIME" 
 
+        #
+        # body message mail
+        #
+        MSG="Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache.\n\n Check your log:\n\n$log_error"
+
+        #
+        # send email [mail]
+        #
+        sendmail "$TO" "$TITLE" "$MSG"
+
+    else
+        
+        echo "active aws cli"
+
+        #
+        # Removing \ t \ r and character '
+        #
+        clean_error=$(echo -n ${log_error} | tr -d "'\t\r")
+        clean_error=$(echo -n ${clean_error} | tr -d '"')
+
+        #
+        # send email [aws cli]
+        #
+        sendmailaws $TO "Server 7.0. ficou Offline! $IDTIME" "<h1>Server being initialized, it was offline for some reason we do not know, return server [$1] check the apache logs in /var/log/apache</h1><br/><h2>Check your log:</h2><p>$clean_error</p>"
+
+    fi
+        
 
     echo 
     #
@@ -204,7 +251,7 @@ do
         # 
         # stop/start server
         # 
-        restart_apache "$cmd_trim"
+        DoApache$SO "$cmd_trim"
 
     fi
     
@@ -247,7 +294,7 @@ else
     #
     # Restart the service
     #
-    restart_apache "Did not find the apache process"
+    DoApache$SO "Did not find the apache process"
 fi
 
            

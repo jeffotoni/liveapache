@@ -5,6 +5,79 @@ It sends e-mails to communicate if the server is not online, you can use mail fo
 
 This script was made in bash in ubuntu environment.
 
+# Setting up some variables
+
+You need to set up email that will receive notifications
+
+```sh
+
+#
+# Email for email submissions
+#
+FROM="yourmail@domain.com"
+
+#
+# Email to
+#
+TO="mailto@domain.com"
+
+```
+
+You need to set up domains you want to test
+
+```sh
+
+#
+# Domains to test if they are online
+# Are all on the same server
+#
+DOMAIN_TEST='https://www.yourdomain1.com http://yourdomain2.com'
+
+```
+
+There are 2 ways to send emails sendmail and sendmailaws, one is by using the mail from the aws cli package to install http://docs.aws.amazon.com/cli/latest/userguide/installing.html to know more about aws ses http: // docs .aws.amazon.com/cli/ latest / reference / ses / send-email.html
+
+By default mail is enabled
+
+```sh
+
+#
+# Shipping method mailutils
+#
+ACTIVE_MAIL="mailutils"
+
+#
+# Shipping method aws cli ses
+#
+#ACTIVE_MAIL="aws"
+
+```
+
+Determines which is the operating system, so that its function is appropriate as each linux distribution
+
+
+```sh
+
+#
+#
+# Determines which is the operating system 
+#
+SO="Ubuntu"
+
+```
+
+Determines the path of the apache error log
+
+
+```sh
+
+#
+# path log error apache
+#
+PATHLOG_ERROR="/var/log/apache2/error.log"
+
+```
+
 # running
 
 $ sh liveapache.sh
