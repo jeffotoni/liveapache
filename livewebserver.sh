@@ -48,9 +48,15 @@ PATHLOG_ERROR="/var/log/apache2/error.log"
 PATHLOG_ERROR_TMP="/tmp/livewebserver_tmp_error.log"
 
 #
+#
+#
+file_post_log="postgresql-$(date +%Y-%m-%d)_000000.log"
+
+
+#
 # path log postgresql
 #
-PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/postgresql-2017-05-07_000000.log"
+PATHLOG_POSTGRE="/var/lib/postgresql/9.5/main/pg_log/$file_post_log"
 
 
 #
